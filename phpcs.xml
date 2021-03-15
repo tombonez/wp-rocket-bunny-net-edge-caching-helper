@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<ruleset name="WP Rocket bunny.net Edge Caching Helper">
+	<description>WP Rocket bunny.net Edge Caching Helper Coding Standard.</description>
+	<file>wp-rocket-bunny-net-edge-caching-helper.php</file>
+	<arg name="extensions" value="php"/>
+	<arg value="-colors"/>
+	<rule ref="WordPress-Extra"/>
+</ruleset>

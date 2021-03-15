@@ -1,0 +1,37 @@
+{
+    "name": "tombonez/wp-rocket-bunny-net-edge-caching-helper",
+    "description": "A WordPress plugin for purging bunny.net's cache after clearing WP Rockets and protecting against direct server access when using bunny.net as a reverse proxy.",
+    "homepage": "https://github.com/tombonez/wp-rocket-bunny-net-edge-caching-helper",
+    "type": "wordpress-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tom Taylor",
+            "homepage": "https://github.com/tombonez"
+        }
+    ],
+    "keywords": [
+        "bunny-net",
+        "wordpress",
+        "wordpress-plugin",
+        "wp-rocket"
+    ],
+    "support": {
+        "issues": "https://github.com/tombonez/wp-rocket-bunny-net-edge-caching-helper/issues"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+        "roave/security-advisories": "dev-latest",
+        "wp-coding-standards/wpcs": "^2.3"
+    },
+    "scripts": {
+        "phpcbf": "vendor/bin/phpcbf",
+        "phpcs": "vendor/bin/phpcs"
+    }
+}

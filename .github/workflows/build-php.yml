@@ -1,0 +1,41 @@
+name: Build PHP
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Use Checkout
+        uses: actions/checkout@v2
+
+      - name: Use PHP 7.4 with Composer 2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.4"
+          tools: composer:v2
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Use Cache
+        uses: actions/cache@v2.1.4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Validate Composer Files
+        run: composer validate
+
+      - name: Install Dependencies
+        run: composer install --no-progress
+
+      - name: Run phpcs
+        run: composer run-script phpcs
