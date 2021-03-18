@@ -3,7 +3,7 @@
  * Plugin Name:  WP Rocket bunny.net Edge Caching Helper
  * Plugin URI:   https://github.com/tombonez/wp-rocket-bunny-net-edge-caching-helper
  * Description:  A WordPress plugin for purging bunny.net's cache after clearing WP Rockets and protecting against direct server access when using bunny.net as a reverse proxy.
- * Version:      1.0.1
+ * Version:      1.0.2
  * Author:       Tom Taylor
  * Author URI:   https://github.com/tombonez
  */
@@ -33,7 +33,7 @@ function require_bunny_net_access_token() {
 	$bunny_net_local_access_token  = defined( 'BUNNY_NET_ACCESS_TOKEN' ) && ! empty( BUNNY_NET_ACCESS_TOKEN ) ? BUNNY_NET_ACCESS_TOKEN : false;
 	$bunny_net_origin_access_token = isset( $_SERVER['HTTP_ORIGIN_ACCESS_TOKEN'] ) && ! empty( $_SERVER['HTTP_ORIGIN_ACCESS_TOKEN'] ) ? $_SERVER['HTTP_ORIGIN_ACCESS_TOKEN'] : false;
 
-	if ( ! defined( 'WP_CLI' ) && $bunny_net_local_access_token && $bunny_net_local_access_token !== $bunny_net_origin_access_token ) {
+	if ( ! defined( 'STDIN' ) && $bunny_net_local_access_token && $bunny_net_local_access_token !== $bunny_net_origin_access_token ) {
 		wp_die( 'Direct server access is not allowed.', '', array( 'response' => 417 ) );
 	}
 }
