@@ -3,38 +3,60 @@
  * Plugin Name:  WP Rocket bunny.net Edge Caching Helper
  * Plugin URI:   https://github.com/tombonez/wp-rocket-bunny-net-edge-caching-helper
  * Description:  A WordPress plugin for purging bunny.net's cache after clearing WP Rockets and protecting against direct server access when using bunny.net as a reverse proxy.
- * Version:      1.0.2
+ * Version:      1.0.3
  * Author:       Tom Taylor
  * Author URI:   https://github.com/tombonez
  */
 
 namespace WPRocketBunnyNetEdgeCachingHelper;
 
-function purge_bunny_net_cache() {
-	$api_key      = defined( 'BUNNY_NET_API_KEY' ) && ! empty( BUNNY_NET_API_KEY ) ? BUNNY_NET_API_KEY : false;
-	$pull_zone_id = defined( 'BUNNY_NET_PULL_ZONE_ID' ) && ! empty( BUNNY_NET_PULL_ZONE_ID ) ? BUNNY_NET_PULL_ZONE_ID : false;
-
-	if ( $api_key && $pull_zone_id ) {
-		wp_remote_post(
-			"https://bunnycdn.com/api/pullzone/{$pull_zone_id}/purgeCache",
-			array(
-				'headers' => array(
-					'Accept'       => 'application/json',
-					'AccessKey'    => $api_key,
-					'Content-Type' => 'application/json',
-				),
-			)
-		);
+function bunny_net_purge_cache() {
+	if ( defined( 'BUNNY_NET_CACHE_PURGING' ) ) {
+		return;
 	}
+
+	if ( ! defined( 'BUNNY_NET_API_KEY' ) || empty( BUNNY_NET_API_KEY ) ) {
+		return;
+	}
+
+	if ( ! defined( 'BUNNY_NET_PULL_ZONE_ID' ) || empty( BUNNY_NET_PULL_ZONE_ID ) ) {
+		return;
+	}
+
+	define( 'BUNNY_NET_CACHE_PURGING', true );
+
+	wp_remote_post(
+		'https://bunnycdn.com/api/pullzone/' . BUNNY_NET_PULL_ZONE_ID . '/purgeCache',
+		array(
+			'headers' => array(
+				'Accept'       => 'application/json',
+				'AccessKey'    => BUNNY_NET_API_KEY,
+				'Content-Type' => 'application/json',
+			),
+		)
+	);
 }
-add_action( 'after_rocket_clean_domain', __NAMESPACE__ . '\\purge_bunny_net_cache' );
+add_action( 'after_rocket_clean_domain', __NAMESPACE__ . '\\bunny_net_purge_cache' );
+add_action( 'after_rocket_clean_post', __NAMESPACE__ . '\\bunny_net_purge_cache' );
+add_action( 'after_rocket_clean_term', __NAMESPACE__ . '\\bunny_net_purge_cache' );
+add_action( 'after_rocket_clean_user', __NAMESPACE__ . '\\bunny_net_purge_cache' );
+add_action( 'after_rocket_clean_home', __NAMESPACE__ . '\\bunny_net_purge_cache' );
+add_action( 'after_rocket_clean_files', __NAMESPACE__ . '\\bunny_net_purge_cache' );
 
-function require_bunny_net_access_token() {
-	$bunny_net_local_access_token  = defined( 'BUNNY_NET_ACCESS_TOKEN' ) && ! empty( BUNNY_NET_ACCESS_TOKEN ) ? BUNNY_NET_ACCESS_TOKEN : false;
-	$bunny_net_origin_access_token = isset( $_SERVER['HTTP_ORIGIN_ACCESS_TOKEN'] ) && ! empty( $_SERVER['HTTP_ORIGIN_ACCESS_TOKEN'] ) ? $_SERVER['HTTP_ORIGIN_ACCESS_TOKEN'] : false;
+function bunny_net_require_access_token() {
+	if ( defined( 'STDIN' ) ) {
+		return;
+	}
 
-	if ( ! defined( 'STDIN' ) && $bunny_net_local_access_token && $bunny_net_local_access_token !== $bunny_net_origin_access_token ) {
+	if ( ! defined( 'BUNNY_NET_ACCESS_TOKEN' ) || empty( BUNNY_NET_ACCESS_TOKEN ) ) {
+		return;
+	}
+
+	if (
+		! isset( $_SERVER['HTTP_ORIGIN_ACCESS_TOKEN'] ) ||
+		BUNNY_NET_ACCESS_TOKEN !== $_SERVER['HTTP_ORIGIN_ACCESS_TOKEN']
+	) {
 		wp_die( 'Direct server access is not allowed.', '', array( 'response' => 417 ) );
 	}
 }
-add_action( 'plugins_loaded', __NAMESPACE__ . '\\require_bunny_net_access_token' );
+add_action( 'plugins_loaded', __NAMESPACE__ . '\\bunny_net_require_access_token' );
