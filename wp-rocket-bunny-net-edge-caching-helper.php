@@ -56,7 +56,7 @@ function bunny_net_require_access_token() {
 		! isset( $_SERVER['HTTP_ORIGIN_ACCESS_TOKEN'] ) ||
 		BUNNY_NET_ACCESS_TOKEN !== $_SERVER['HTTP_ORIGIN_ACCESS_TOKEN']
 	) {
-		wp_die( 'Direct server access is not allowed.', '', array( 'response' => 417 ) );
+		wp_die( 'Direct server access is forbidden.', 'Access Forbidden', array( 'response' => 403 ) );
 	}
 }
 add_action( 'plugins_loaded', __NAMESPACE__ . '\\bunny_net_require_access_token' );
