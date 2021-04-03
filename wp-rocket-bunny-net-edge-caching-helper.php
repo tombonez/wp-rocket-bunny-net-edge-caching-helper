@@ -3,7 +3,7 @@
  * Plugin Name:  WP Rocket bunny.net Edge Caching Helper
  * Plugin URI:   https://github.com/tombonez/wp-rocket-bunny-net-edge-caching-helper
  * Description:  A WordPress plugin for purging bunny.net's cache after clearing WP Rockets and protecting against direct server access when using bunny.net as a reverse proxy.
- * Version:      1.0.3
+ * Version:      1.0.4
  * Author:       Tom Taylor
  * Author URI:   https://github.com/tombonez
  */
