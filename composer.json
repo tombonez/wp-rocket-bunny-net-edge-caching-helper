@@ -20,6 +20,9 @@
         "issues": "https://github.com/tombonez/wp-rocket-bunny-net-edge-caching-helper/issues"
     },
     "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
         "sort-packages": true
     },
     "require": {
