@@ -31,7 +31,7 @@
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
         "roave/security-advisories": "dev-latest",
-        "wp-coding-standards/wpcs": "^2.3"
+        "wp-coding-standards/wpcs": "^3.0"
     },
     "scripts": {
         "phpcbf": "vendor/bin/phpcbf",
